@@ -5,21 +5,126 @@ import java.util.*;
 
 public class MainGenerics {
     public static void main(String[] args)  {
-        System.out.println(heightChecker1(new int[]{1,1,4,2,1,3}));
-
+        System.out.println(pivotIndex(new int[]{1,7,3,6,5,6}));
     }
-    public int thirdMax(int[] nums) {
-        int firstMax=0;
-        int secondMax=0;
-        int thirdMax=0;
-        boolean exist =false;
-        if (nums.length==1) return nums[0];
-        if (nums.length==2){
-            return Math.max(nums[0],nums[1]);
+    public static int pivotIndex(int[] nums) {
+        int totalSum =0;
+        for (int n:nums){
+            totalSum+=n;
         }
-        return 0;
+       int leftSum=0;
+        for (int i=0;i<nums.length;i++){
+            int rightSum = totalSum-leftSum-nums[i];
+            if (leftSum==rightSum){
+                return i;
+            }
+            leftSum+=nums[i];
+        }
+        return -1;
+    }
+    public int[] sortedSquares(int[] nums) {
+        int[] array = new int[nums.length];
+        int leftIndex=0;
+        int rightIndex=nums.length-1;
+        int arrayIndex=nums.length-1;
+        while (leftIndex<=rightIndex){
+            int leftSquare=nums[leftIndex]*nums[leftIndex];
+            int rightSquare = nums[rightIndex]*nums[rightIndex];
+            if (leftSquare<rightSquare){
+                array[arrayIndex]=rightSquare;
+                rightIndex--;
+            }else {
+                array[arrayIndex]=leftSquare;
+                leftIndex++;
+            }
+            arrayIndex--;
+        }
+        return array;
+    }
+
+    public static boolean isValid(String s) {
+        if (s.length()%2!=0){
+            return false;
+        }
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(91,0);
+        map.put(93,0);
+        map.put(40,0);
+        map.put(41,0);
+        map.put(123,0);
+        map.put(125,0);
+        for (int i =0;i<s.length();i++){
+            if (map.get(91)==s.charAt(i)){
+                int value =map.get(91);
+                value++;
+                map.put(91,value);
+            }else if (map.get(93)==s.charAt(i)) {
+                int value = map.get(93);
+                value++;
+                map.put(93, value);
+            }else if (map.get(40)==s.charAt(i)){
+                int value =map.get(40);
+                map.put(40,++value);
+            }else if (map.get(41)==s.charAt(i)){
+                int value =map.get(41);
+                map.put(41,++value);
+            }else if (map.get(123)==s.charAt(i)){
+                int value =map.get(123);
+                map.put(123,++value);
+            }else if (map.get(125)==s.charAt(i)){
+                int value =map.get(125);
+                map.put(125,++value);
+            }
+//            if (map.containsKey((int)s.charAt(i))){
+//                int value = map.get((int)s.charAt(i));
+//                map.put((int)s.charAt(i),value++);
+//            }
+        }
+        if ((!map.get(91).equals(map.get(93))) || (!Objects.equals(map.get(40), map.get(41)))||(!Objects.equals(map.get(123), map.get(125)))){
+            return false;
+        }
+        return true;
+    }
+
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        int length = nums.length;
+        List<Integer> result = new ArrayList<>();
+        int[] array= new int[100001];
+        for (int n :nums){
+            array[n]++;
+        }
+        for (int i=1;i<=length;i++){
+            if (array[i]==0){
+                result.add(i);
+            }
+        }
+    return result;
 
     }
+    public  static int thirdMax(int[] nums) {
+        Long firstMax=null;
+        Long secondMax=null;
+        Long thirdMax=null;
+        for (long n:nums){
+
+            if ((firstMax!=null &&firstMax == n) ||(secondMax!=null && secondMax==n) ||(thirdMax!=null &&thirdMax==n)) continue;
+
+            if (firstMax==null || n>firstMax){
+                thirdMax=secondMax;
+                secondMax=firstMax;
+                firstMax=n;
+            } else if (secondMax==null || n>secondMax) {
+                thirdMax=secondMax;
+                secondMax=n;
+            } else if (thirdMax==null || n>thirdMax) {
+                thirdMax=n;
+            }
+        }
+        return thirdMax==null? firstMax.intValue():thirdMax.intValue();
+
+    }
+
+
     public  static int heightChecker1(int[] heights){
        int[] array = new int[101];
 
@@ -73,20 +178,21 @@ public class MainGenerics {
         return count;
     }
 
-    public int[] sortArrayByParity(int[] nums) {
-        int left = 0;
-        int right = nums.length - 1;
-        while (left < right) {
-            if (nums[left] % 2 > nums[right]) {
-                int temp = nums[left];
-                nums[left] = nums[right];
-                nums[right] = temp;
-            }
-            if (nums[left] % 2 == 0) left++;
-            if (nums[right] % 2 == 1) right--;
-        }
-        return nums;
-    }
+
+//    public int[] sortArrayByParity(int[] nums) {
+//        int left = 0;
+//        int right = nums.length - 1;
+//        while (left < right) {
+//            if (nums[left] % 2 > nums[right]) {
+//                int temp = nums[left];
+//                nums[left] = nums[right];
+//                nums[right] = temp;
+//            }
+//            if (nums[left] % 2 == 0) left++;
+//            if (nums[right] % 2 == 1) right--;
+//        }
+//        return nums;
+//    }
 
     public static void test(int age) {
         if (age < 18) {
@@ -146,24 +252,6 @@ public class MainGenerics {
     }
 
 
-    public static void serialize() throws IOException {
-        Student student = new Student();
-        student.setName("Ali");
-        student.setAge(12);
-        student.setPassword("dfhjdhjhdj");
-
-        FileOutputStream fileOutputStream = new FileOutputStream("student.txt");
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-
-        objectOutputStream.writeObject(student);
 
     }
 
-    public static void deSerialize() throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("student.txt");
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        Student student = (Student) objectInputStream.readObject();
-        System.out.println(student.getName() + " " + student.getAge() + " " + student.getPassword());
-
-    }
-}
