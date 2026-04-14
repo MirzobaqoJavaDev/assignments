@@ -5,8 +5,47 @@ import java.util.*;
 
 public class MainGenerics {
     public static void main(String[] args)  {
-        System.out.println(pivotIndex(new int[]{1,7,3,6,5,6}));
+        System.out.println(Arrays.toString(plusOne(new int[]{1, 7, 3, 6, 9,9})));
+
+
     }
+    public static int[] plusOne(int[] digits) {
+        int count=0;
+       for (int i=digits.length-1;i>=0;i--){
+           if (digits[i]==9){
+               digits[i]=0;
+               count++;
+           }else {
+               digits[i]+=1;
+               break;
+           }
+       }
+       if (count==digits.length){
+           int[] array = new int[digits.length+1];
+           array[0]=1;
+           return array;
+       }
+
+       return digits;
+    }
+
+    public int dominantIndex(int[] nums) {
+       int firstMax=Integer.MIN_VALUE;
+       int secondMax=Integer.MIN_VALUE;
+       int index=0;
+
+       for (int i=0;i<nums.length;i++){
+           if (nums[i]>firstMax){
+               secondMax=firstMax;
+               firstMax=nums[i];
+               index=i;
+           }else if (nums[i]>secondMax && nums[i]<firstMax){
+               secondMax=nums[i];
+           }
+       }
+       return firstMax>2*secondMax?index:-1;
+    }
+
     public static int pivotIndex(int[] nums) {
         int totalSum =0;
         for (int n:nums){
